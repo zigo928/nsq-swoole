@@ -143,16 +143,16 @@ class Client {
     /**
      * Publish message
      *
-     * @param string $topic A valid topic name: [.a-zA-Z0-9_-] and 1 < length < 32
-     * @param string|array $msgs array: multiple messages
-     * @param int $tries  Retry times
+     * @param string       $topic A valid topic name: [.a-zA-Z0-9_-] and 1 < length < 32
+     * @param string|array $msgs  array: multiple messages
+     * @param int          $deferTime
+     * @param int          $tries Retry times
      *
-     * @throws PublishException If we don't get "OK" back from server
+     * @return $this If we don't get "OK" back from server
      *      (for the specified number of hosts - as directed by `publishTo`)
-     *
-     * @return $this
      */
-    public function publish($topic, $msgs, $tries = 1) {
+    public function publish($topic, $msgs, $deferTime = 0, $tries = 1)
+    {
         // pick a random
         shuffle($this->producerPool);
 
@@ -162,7 +162,8 @@ class Client {
             try {
                 for ($run = 0; $run <= $tries; $run++) {
                     try {
-                        $payload = is_array($msgs) ? Command::mpub($topic, $msgs) : Command::pub($topic, $msgs);
+                        $payload = is_array($msgs) ? Command::mpub($topic, $msgs) :
+                            $deferTime ? Command::dpub($topic, $deferTime, $msgs) : Command::pub($topic, $msgs);
                         $producer->write($payload);
 
                         $frame = Response::readFrame($producer->readAll());

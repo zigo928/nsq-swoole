@@ -13,6 +13,7 @@ class Command {
     const SUB = "SUB";
     const PUB = "PUB";
     const MPUB = "MPUB";
+    const DPUB = "DPUB";
     const RDY = "RDY";
     const FIN = "FIN";
     const REQ = "REQ";
@@ -85,6 +86,20 @@ class Command {
         }
 
         return sprintf("%s %s\n%s%s%s", self::MPUB, $topic, pack("N", strlen($msgs)), pack("N", count($data)), $msgs);
+    }
+
+    /**
+     * Publish a deferred message to a topic
+     *
+     * @param $topic
+     * @param $deferTime
+     * @param $data
+     *
+     * @return string
+     */
+    public static function dpub($topic, $deferTime, $data)
+    {
+        return self::packet(self::DPUB, [$topic, $deferTime], $data);
     }
 
     /**

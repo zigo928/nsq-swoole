@@ -8,8 +8,9 @@
 require __DIR__ . '/../autoload.php';
 
 $lookup = new Asan\Nsq\Lookup\Lookupd([
-    ['host' => '192.168.1.50', 'port' => 4161],
-    ['host' => '192.168.1.51', 'port' => 4161]
+//    ['host' => '192.168.1.50', 'port' => 4161],
+//    ['host' => '192.168.1.51', 'port' => 4161]
+    ['host' => '127.0.0.1', 'port' => 4161]
 ]);
 
 $client = new Asan\Nsq\Client;
